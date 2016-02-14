@@ -2,7 +2,7 @@
 
 Howl is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **8** hours spent in total
+Time spent: **6** hours spent in total
 
 ## User Stories
 
