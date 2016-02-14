@@ -39,6 +39,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
     
     var categories: [[String:String]]!
     var switchStates = [Int:Bool]()
+    var dealState = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +48,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.registerClass(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
 
         // Do any additional setup after loading the view.
     }
@@ -57,23 +59,80 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        switch section {
+        case 0:
+            return 1
+        case 1:
+            return categories.count
+        default:
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SwitchCell", forIndexPath: indexPath) as! SwitchCell
         
-        cell.switchLabel.text = categories[indexPath.row]["name"]
-        cell.switchControl.on = switchStates[indexPath.row] ?? false
-        cell.delegate = self
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SwitchCell", forIndexPath: indexPath) as! SwitchCell
+            cell.switchLabel.text = "Offering a Deal"
+            cell.switchControl.on = dealState
+            cell.delegate = self
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SwitchCell", forIndexPath: indexPath) as! SwitchCell
+            cell.switchLabel.text = categories[indexPath.row]["name"]
+            cell.switchControl.on = switchStates[indexPath.row] ?? false
+            cell.delegate = self
+            return cell
+            
+        default:
+            let cell = UITableViewCell()
+            return cell
+        }
         
-        return cell
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 4
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("HeaderView")! as UITableViewHeaderFooterView
+        let text: String
+        
+        switch section {
+        case 0:
+            text = "Yelp Deals"
+        case 1:
+            text = "Cuisine"
+        case 2:
+            text = "Sort By"
+        case 3:
+            text = "Category"
+        default:
+            text = "Error"
+        }
+        
+        header.textLabel!.text = text
+        header.detailTextLabel?.font = UIFont(name: "System", size: CGFloat(32.0))
+        return header
     }
     
     func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
         let indexPath = tableView.indexPathForCell(switchCell)!
-        
-        self.switchStates[indexPath.row] = value
+        switch indexPath.section {
+        case 0:
+            self.dealState = value
+        case 1:
+            self.switchStates[indexPath.row] = value
+        default:
+            return
+        }
     }
     
     func yelpCategories() -> [[String:String]] {
@@ -91,6 +150,25 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             ["name": "Mexican", "code": "mexican"],
             ["name": "Sushi Bars", "code": "sushi"],
             ["name": "Thai", "code": "thai"],
+        ]
+    }
+    
+    func yelpDistances() -> [[String:String]] {
+        return [["name": "0.1 miles", "value": "160"],
+                ["name": "0.3 miles", "value": "480"],
+                ["name": "0.5 miles", "value": "800"],
+                ["name": "1 mile", "value": "1600"],
+                ["name": "5 miles", "value": "8000"],
+                ["name": "25 miles", "value": "40000"],
+        ]
+    }
+    
+    // Yelp Deals = on/off
+
+    func yelpSort() -> [[String:String]] {
+        return [["name": "Best Match", "value": "0"],
+                ["name": "Distance", "value": "1"],
+                ["name": "Highest Rated", "value": "2"],
         ]
     }
 }

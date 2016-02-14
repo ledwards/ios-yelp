@@ -77,8 +77,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String:AnyObject]) {
 
         let categories = filters["categories"] as? [String]
+        let deals = filters["deals"] as? Bool
         
-        Business.searchWithTerm("Restaurants", sort: nil, categories: categories, deals: nil) { (businesses: [Business]!, error: NSError!) -> Void in
+        Business.searchWithTerm("Restaurants", sort: nil, categories: categories, deals: deals) { (businesses: [Business]!, error: NSError!) -> Void in
         self.businesses = businesses
         self.tableView.reloadData()
         }
