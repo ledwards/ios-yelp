@@ -34,23 +34,34 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
         
+        filters["deals"] = dealState
+        filters["distance"] = distanceState
+        filters["sort"] = sortState
+        
         delegate?.filtersViewController?(self, didUpdateFilters: filters)
     }
     
     var categories: [[String:String]]!
+    var distances: [[String:String]]!
+    var sorts: [String]!
+    
     var switchStates = [Int:Bool]()
     var dealState = false
+    var distanceState: String?
+    var sortState: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.allowsMultipleSelection = true
+        
         categories = yelpCategories()
+        distances = yelpDistances()
+        sorts = yelpSorts()
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerClass(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,6 +75,10 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             return 1
         case 1:
             return categories.count
+        case 2:
+            return distances.count
+        case 3:
+            return sorts.count
         default:
             return 0
         }
@@ -84,6 +99,16 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             cell.switchLabel.text = categories[indexPath.row]["name"]
             cell.switchControl.on = switchStates[indexPath.row] ?? false
             cell.delegate = self
+            return cell
+        
+        case 2:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SelectCell", forIndexPath: indexPath) as! SelectCell
+            cell.selectLabel.text = distances[indexPath.row]["name"]
+            return cell
+            
+        case 3:
+            let cell = tableView.dequeueReusableCellWithIdentifier("SelectCell", forIndexPath: indexPath) as! SelectCell
+            cell.selectLabel.text = sorts[indexPath.row]
             return cell
             
         default:
@@ -111,9 +136,9 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
         case 1:
             text = "Cuisine"
         case 2:
-            text = "Sort By"
+            text = "Within a distance of"
         case 3:
-            text = "Category"
+            text = "Sort by"
         default:
             text = "Error"
         }
@@ -134,6 +159,35 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             return
         }
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        
+        switch indexPath.section {
+        case 0:
+            cell?.selected = false
+        case 1:
+            cell?.selected = false
+        case 2:
+            unselectOthers(indexPath)
+            distanceState = distances[indexPath.row]["value"]
+        case 3:
+            unselectOthers(indexPath)
+            sortState = indexPath.row
+        default:
+            print("tap")
+        }
+    }
+    
+    func unselectOthers(indexPath: NSIndexPath) {
+        for row in 0...tableView.numberOfRowsInSection(indexPath.section) - 1 {
+            if row != indexPath.row {
+                tableView.cellForRowAtIndexPath(NSIndexPath(forRow: row, inSection: indexPath.section))!.selected = false
+            }
+        }
+    }
+    
+    // Yelp Deals = on/off
     
     func yelpCategories() -> [[String:String]] {
         return [["name": "Afghani", "code": "afghani"],
@@ -163,12 +217,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
         ]
     }
     
-    // Yelp Deals = on/off
-
-    func yelpSort() -> [[String:String]] {
-        return [["name": "Best Match", "value": "0"],
-                ["name": "Distance", "value": "1"],
-                ["name": "Highest Rated", "value": "2"],
-        ]
+    func yelpSorts() -> [String] {
+        return ["Best Matched", "Distance", "Highest Rated"]
     }
 }

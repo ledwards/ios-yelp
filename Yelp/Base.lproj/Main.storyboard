@@ -190,6 +190,31 @@
                                             <outlet property="switchLabel" destination="1TG-Ep-d1A" id="zxl-Ju-YBI"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectCell" id="Zsx-hm-mez" customClass="SelectCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="157.5" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zsx-hm-mez" id="lZA-kj-L2c">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mR5-ez-U4E" userLabel="Select Label">
+                                                    <rect key="frame" x="8" y="0.0" width="312" height="43.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="mR5-ez-U4E" secondAttribute="bottom" id="E3G-3T-Bqd"/>
+                                                <constraint firstAttribute="trailing" secondItem="mR5-ez-U4E" secondAttribute="trailing" id="Fy0-be-Jp8"/>
+                                                <constraint firstItem="mR5-ez-U4E" firstAttribute="leading" secondItem="lZA-kj-L2c" secondAttribute="leading" constant="8" id="Ibw-bY-BMb"/>
+                                                <constraint firstItem="mR5-ez-U4E" firstAttribute="top" secondItem="lZA-kj-L2c" secondAttribute="top" id="gg2-Je-cjE"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="selectLabel" destination="mR5-ez-U4E" id="sLm-KE-j8x"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
